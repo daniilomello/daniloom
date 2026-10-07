@@ -13,7 +13,7 @@
     "desktop:dev": "npm run desktop:native && vite build && electron desktop",
     "desktop:start": "electron desktop",
     "desktop:build": "npm run desktop:icons && npm run desktop:native && vite build && electron-builder --config electron-builder.config.cjs --mac",
-    "desktop:build:win": "npm run desktop:icons && vite build && electron-builder --config electron-builder.config.cjs --win --publish never",
+    "desktop:build:win": "npm run desktop:icons && vite build && electron-builder --config electron-builder.config.cjs --win",
     "desktop:pack": "npm run desktop:icons && npm run desktop:native && vite build && electron-builder --config electron-builder.config.cjs --mac --dir",
     "desktop:test": "node --test desktop/*.test.cjs && tsx --test src/desktop/*.test.ts",
     "desktop:icons": "node scripts/build-desktop-icons.mjs",
