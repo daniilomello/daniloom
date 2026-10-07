@@ -1,0 +1,8 @@
+{
+  "name": "daniloom-desktop",
+  "version": "0.6.0",
+  "description": "Daniloom Desktop — gravação de tela e webcam com projetos compartilhados",
+  "author": "Daniloom",
+  "main": "main.cjs",
+  "private": true
+}

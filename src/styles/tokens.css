@@ -1,0 +1,188 @@
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --text-3xs: 0.5625rem;
+  --text-3xs--line-height: 0.75rem;
+  --text-2xs: 0.625rem;
+  --text-2xs--line-height: 0.875rem;
+  --text-meta: 0.6875rem;
+  --text-meta--line-height: 1rem;
+
+  --breakpoint-xs: 30rem;
+
+  --color-app: var(--ds-app);
+  --color-chrome: var(--ds-surface);
+  --color-rail: var(--ds-surface);
+  --color-surface: var(--ds-surface);
+  --color-surface-hover: var(--ds-hover);
+  --color-overlay: var(--ds-surface);
+  --color-overlay-footer: var(--ds-surface);
+  --color-field: var(--ds-surface);
+  --color-muted: var(--ds-muted);
+  --color-hover: var(--ds-hover);
+  --color-scrim: var(--ds-scrim);
+  --color-line: var(--ds-line);
+  --color-line-strong: var(--ds-line);
+  --color-fg: var(--ds-fg);
+  --color-fg-default: var(--ds-fg);
+  --color-fg-secondary: var(--ds-fg-muted);
+  --color-fg-muted: var(--ds-fg-muted);
+  --color-fg-subtle: var(--ds-fg-muted);
+  --color-primary: var(--ds-primary);
+  --color-primary-hover: var(--ds-primary-hover);
+  --color-on-primary: var(--ds-on-primary);
+  --color-inverse: var(--ds-primary);
+  --color-inverse-hover: var(--ds-primary-hover);
+  --color-on-inverse: var(--ds-on-primary);
+  --color-success-fg: var(--ds-fg-muted);
+  --color-danger-fg: var(--ds-danger-fg);
+  --color-warning-fg: var(--ds-fg-muted);
+  --color-accent-fg: var(--ds-fg-muted);
+  --color-overdue: var(--ds-danger-fg);
+  --color-link: var(--ds-fg);
+  --color-zinc-750: #2e2e33;
+  --color-zinc-850: #1a1b20;
+}
+
+:root {
+  --ds-app: #f4f4f5;
+  --ds-surface: rgb(255 255 255 / 0.62);
+  --ds-muted: rgb(24 24 27 / 0.06);
+  --ds-hover: rgb(24 24 27 / 0.08);
+  --ds-line: rgb(24 24 27 / 0.08);
+  --ds-fg: #18181b;
+  --ds-fg-muted: #71717a;
+  --ds-primary: #3b46ac;
+  --ds-primary-hover: #313a91;
+  --ds-on-primary: #fafafa;
+  --ds-radial-center: color-mix(in srgb, var(--ds-primary) 7%, var(--ds-app));
+  --ds-radial-stop: 72%;
+  --ds-scrim: rgb(0 0 0 / 0.45);
+  --ds-danger-fg: #dc2626;
+}
+
+.dark {
+  color-scheme: dark;
+  --ds-app: #0c0d0f;
+  --ds-surface: rgb(255 255 255 / 0.045);
+  --ds-muted: rgb(255 255 255 / 0.06);
+  --ds-hover: rgb(255 255 255 / 0.08);
+  --ds-line: rgb(255 255 255 / 0.07);
+  --ds-fg: #f4f4f5;
+  --ds-fg-muted: #71717a;
+  --ds-primary: #4f5ac4;
+  --ds-primary-hover: #6670d4;
+  --ds-on-primary: #fafafa;
+  --ds-radial-center: color-mix(in srgb, var(--ds-primary) 10%, var(--ds-app));
+  --ds-radial-stop: 62%;
+  --ds-scrim: rgb(0 0 0 / 0.7);
+  --ds-danger-fg: #f87171;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@theme inline {
+  --animate-fade-in: fade-in 100ms ease-out;
+  --animate-pop-in: pop-in 120ms ease-out;
+  --animate-slide-down: slide-down 200ms ease-out;
+}
+
+/* Estado ativo de menus, abas e toggles: glass tingido com a cor primária + borda */
+@utility ds-active {
+  background-color: color-mix(in srgb, var(--ds-primary) 22%, transparent);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--ds-primary) 70%, transparent);
+  color: var(--ds-fg);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+}
+
+.ds-glass {
+  background: var(--ds-surface);
+  backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  border: 1px solid var(--ds-line);
+}
+
+.bg-pattern-solid {
+  background-color: var(--ds-app);
+}
+
+.bg-pattern-dots {
+  background-color: var(--ds-app);
+  background-image: radial-gradient(
+    rgb(127 127 127 / 0.18) 1px,
+    transparent 1px
+  );
+  background-size: 18px 18px;
+}
+
+.bg-pattern-grid {
+  background-color: var(--ds-app);
+  background-image:
+    linear-gradient(rgb(127 127 127 / 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(127 127 127 / 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.bg-pattern-radial {
+  background-color: var(--ds-app);
+  background-image: radial-gradient(
+    circle at 50% 20%,
+    var(--ds-radial-center) 0%,
+    var(--ds-app) var(--ds-radial-stop)
+  );
+}
+
+.ds-prose {
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--ds-fg);
+}
+
+.ds-prose a {
+  color: var(--ds-fg);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ds-prose code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+.ds-prose p + p {
+  margin-top: 0.75rem;
+}

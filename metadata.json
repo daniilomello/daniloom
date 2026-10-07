@@ -1,0 +1,13 @@
+{
+  "name": "daniloom",
+  "description": "Gravador de tela e webcam inteligente com teleprompter, filtros, edição de clipes, geração de transcrição e posts de redes sociais com IA.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "display-capture",
+    "picture-in-picture"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

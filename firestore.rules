@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global safety net (default deny)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper function to check if the user is the admin
+    function isAdmin() {
+      return request.auth != null 
+        && request.auth.token.email == 'oi@daniilo.dev'
+        && request.auth.token.email_verified == true;
+    }
+
+    // Helper to validate the SharedLink entity structure
+    function isValidSharedLink(data) {
+      return data.fileId is string 
+        && data.fileId.size() <= 200
+        && data.expiresAt is int;
+    }
+
+    match /projects/{projectId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /sharedLinks/{token} {
+      // Anyone can get (read) a shared link to see the video
+      allow get: if true;
+      
+      // Only the admin can create, update, or delete shared links
+      allow create, update: if isAdmin() && isValidSharedLink(request.resource.data);
+      allow delete: if isAdmin();
+    }
+  }
+}

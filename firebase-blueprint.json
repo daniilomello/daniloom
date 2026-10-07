@@ -1,0 +1,26 @@
+{
+  "entities": {
+    "SharedLink": {
+      "title": "SharedLink",
+      "description": "A temporary link to view a backed-up video",
+      "type": "object",
+      "properties": {
+        "fileId": {
+          "type": "string",
+          "description": "Google Drive File ID"
+        },
+        "expiresAt": {
+          "type": "number",
+          "description": "Expiration timestamp in ms since epoch"
+        }
+      },
+      "required": ["fileId", "expiresAt"]
+    }
+  },
+  "firestore": {
+    "sharedLinks/{token}": {
+      "schema": "SharedLink",
+      "description": "Storage for temporary shared video links"
+    }
+  }
+}

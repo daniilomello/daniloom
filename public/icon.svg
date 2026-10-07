@@ -1,0 +1,31 @@
+
+  <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="512" height="512" rx="112" fill="#020617"/>
+    <circle cx="256" cy="256" r="210" fill="url(#bg-grad)" fill-opacity="0.15"/>
+    <circle cx="256" cy="256" r="150" stroke="url(#ring-grad)" stroke-width="20" stroke-linecap="round"/>
+    
+    <!-- Outer recording pill/badge -->
+    <rect x="136" y="156" width="240" height="200" rx="60" fill="url(#main-grad)"/>
+    
+    <!-- Camera lens / Play button inside -->
+    <path d="M296 256L236 291V221L296 256Z" fill="#FFFFFF"/>
+    
+    <!-- Record pulse dot -->
+    <circle cx="340" cy="186" r="14" fill="#EF4444"/>
+
+    <defs>
+      <linearGradient id="bg-grad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#F43F5E"/>
+        <stop offset="0.5" stop-color="#A855F7"/>
+        <stop offset="1" stop-color="#0284C7"/>
+      </linearGradient>
+      <linearGradient id="ring-grad" x1="106" y1="106" x2="406" y2="406" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#F43F5E"/>
+        <stop offset="1" stop-color="#06B6D4"/>
+      </linearGradient>
+      <linearGradient id="main-grad" x1="136" y1="156" x2="376" y2="356" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#E11D48"/>
+        <stop offset="1" stop-color="#9333EA"/>
+      </linearGradient>
+    </defs>
+  </svg>

@@ -1,0 +1,28 @@
+module.exports = {
+  appId: 'dev.daniilo.daniloom',
+  productName: 'Daniloom',
+  electronVersion: require('./package.json').devDependencies.electron.replace(/^[~^]/, ''),
+  directories: { app: 'desktop', output: 'release' },
+  files: ['*.cjs', 'package.json', '!*.test.cjs', '!node_modules/**/*'],
+  extraResources: [{ from: 'dist', to: 'ui', filter: ['**/*', '!server.cjs', '!server.cjs.map'] }],
+  win: { target: [{ target: 'nsis', arch: ['x64'] }], icon: 'public/desktop-icon.png' },
+  nsis: { oneClick: false, allowToChangeInstallationDirectory: true, artifactName: 'Daniloom-${version}-windows-${arch}.${ext}' },
+  mac: {
+    extraResources: [{ from: 'assets/permissions-helper', to: 'permissions-helper' }],
+    target: [{ target: 'dmg', arch: ['arm64'] }],
+    category: 'public.app-category.productivity',
+    icon: 'assets/desktop-icon.icns',
+    hardenedRuntime: true,
+    entitlements: 'desktop/entitlements.mac.plist',
+    entitlementsInherit: 'desktop/entitlements.mac.plist',
+    extendInfo: {
+      LSUIElement: false,
+      LSBackgroundOnly: false,
+      NSScreenCaptureUsageDescription: 'O Daniloom grava a tela ou janela que você selecionar.',
+      NSCameraUsageDescription: 'O Daniloom usa sua câmera nas gravações e na prévia.',
+      NSMicrophoneUsageDescription: 'O Daniloom grava sua narração junto com o vídeo.',
+      NSAudioCaptureUsageDescription: 'O Daniloom grava o áudio dos aplicativos junto com a tela.',
+    },
+  },
+  dmg: { title: 'Daniloom', contents: [{ x: 130, y: 220 }, { x: 410, y: 220, type: 'link', path: '/Applications' }] },
+};

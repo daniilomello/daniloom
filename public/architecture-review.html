@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepening Opportunities - Architecture Review</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'slate' });
+    </script>
+    <style>
+        body { background-color: #0f172a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+        .mermaid { background: #1e293b; padding: 1.5rem; border-radius: 0.75rem; display: flex; justify-content: center; }
+        .badge { font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 9999px; }
+        .badge-strong { background-color: #10b981; color: #064e3b; }
+        .badge-worth { background-color: #f59e0b; color: #78350f; }
+    </style>
+</head>
+<body class="p-8 max-w-5xl mx-auto">
+    <header class="mb-12">
+        <h1 class="text-4xl font-bold text-white mb-4">Architecture Review: Deepening Opportunities</h1>
+        <p class="text-slate-400 text-lg leading-relaxed">
+            The codebase exhibits several "shallow" spots — especially in `App.tsx`, which has swelled to nearly 8,000 lines. 
+            By introducing proper <strong>seams</strong> and extracting <strong>deep modules</strong> with clean <strong>interfaces</strong>, we can drastically improve <strong>locality</strong> and gain <strong>leverage</strong> for future feature development.
+        </p>
+    </header>
+
+    <div class="space-y-12">
+        
+        <!-- Candidate 1 -->
+        <section class="bg-slate-800 border border-slate-700 rounded-xl p-8 shadow-lg">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h2 class="text-2xl font-semibold text-white mb-2">1. The Recording Engine</h2>
+                    <p class="text-sm font-mono text-slate-400">Files: src/App.tsx</p>
+                </div>
+                <span class="badge badge-strong">Strong</span>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-lg font-medium text-emerald-400 mb-2">Problem</h3>
+                <p class="text-slate-300 leading-relaxed">
+                    The main React component (`App.tsx`) is a <strong>shallow</strong> module. It directly manages the `MediaRecorder` lifecycle, parses MIME types, tracks recording time, and handles low-level browser APIs (`navigator.mediaDevices`). This lack of <strong>locality</strong> means bugs in the UI and bugs in the recording logic are tangled together. The interface is just as complex as the implementation because it's completely exposed within the component body.
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-lg font-medium text-emerald-400 mb-2">Solution</h3>
+                <p class="text-slate-300 leading-relaxed">
+                    Extract a deep `RecordingEngine` module behind a clean <strong>interface</strong>. The interface should expose high-level commands (`startRecording()`, `stopRecording()`) and reactive state (`status`, `duration`), hiding the MIME fallback and MediaRecorder chunk accumulation behind the <strong>seam</strong>. The React component becomes an <strong>adapter</strong> that simply observes and commands the engine.
+                </p>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-lg font-medium text-emerald-400 mb-2">Benefits</h3>
+                <p class="text-slate-300 leading-relaxed">
+                    Enormous <strong>leverage</strong> for future changes. We can test the recording logic without mounting the entire React DOM, and the UI becomes purely declarative.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h4 class="text-sm font-semibold text-slate-400 mb-3 uppercase tracking-wider text-center">Before (Shallow & Tangled)</h4>
+                    <div class="mermaid">
+                        graph TD
+                        A[App.tsx] --> B[MediaRecorder API]
+                        A --> C[MIME Type Checks]
+                        A --> D[Blob Accumulation]
+                        A --> E[React State]
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold text-slate-400 mb-3 uppercase tracking-wider text-center">After (Deepened Module)</h4>
+                    <div class="mermaid">
+                        graph TD
+                        A[App.tsx] -- "start/stop()" --> B((RecordingEngine))
+                        B --> C[MediaRecorder API]
+                        B --> D[Blob Accumulation]
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Candidate 2 -->
+        <section class="bg-slate-800 border border-slate-700 rounded-xl p-8 shadow-lg">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h2 class="text-2xl font-semibold text-white mb-2">2. The Compositing Pipeline</h2>
+                    <p class="text-sm font-mono text-slate-400">Files: src/App.tsx, src/utils/videoMerger.ts</p>
+                </div>
+                <span class="badge badge-strong">Strong</span>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-lg font-medium text-emerald-400 mb-2">Problem</h3>
+                <p class="text-slate-300 leading-relaxed">
+                    Drawing the video layout (screen + camera bubble + filters) is currently scattered between `App.tsx` (for the live preview loop) and `videoMerger.ts` (for the final export). There is no single <strong>module</strong> responsible for "Visual Compositing". The logic is duplicated, leading to friction when adding a new layout mode (like a new camera shape).
+                </p>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-lg font-medium text-emerald-400 mb-2">Solution</h3>
+                <p class="text-slate-300 leading-relaxed">
+                    Create a deep `Compositor` module that takes a declarative layout state (e.g., `{ mode: 'split', ratio: 0.5 }`) and a target `CanvasRenderingContext2D`. Both the real-time preview loop and the offline `videoMerger` act as <strong>adapters</strong> calling into this shared compositor <strong>seam</strong>.
+                </p>
+            </div>
+
+            <div class="mb-8">
+                <h3 class="text-lg font-medium text-emerald-400 mb-2">Benefits</h3>
+                <p class="text-slate-300 leading-relaxed">
+                    Centralizes the canvas math, drastically increasing <strong>locality</strong>. You change the "split screen" logic in one place, and it immediately works for both live preview and exported videos. High <strong>leverage</strong>.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h4 class="text-sm font-semibold text-slate-400 mb-3 uppercase tracking-wider text-center">Before (Scattered Logic)</h4>
+                    <div class="mermaid">
+                        graph TD
+                        A[App.tsx loop] -->|draws| C[Canvas API]
+                        B[videoMerger.ts] -->|draws| C
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold text-slate-400 mb-3 uppercase tracking-wider text-center">After (Shared Seam)</h4>
+                    <div class="mermaid">
+                        graph TD
+                        A[App.tsx preview] --> C((Compositor))
+                        B[videoMerger.ts] --> C
+                        C -->|draws| D[Canvas API]
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <div class="mt-12 bg-emerald-900/30 border border-emerald-800 rounded-xl p-8">
+        <h2 class="text-2xl font-bold text-white mb-4">Top Recommendation</h2>
+        <p class="text-slate-300 leading-relaxed mb-4">
+            I strongly recommend tackling <strong>The Recording Engine</strong> first. `App.tsx` is buckling under the weight of almost 8,000 lines. Extracting the stateful, low-level `MediaRecorder` logic into a separate deep module will instantly restore <strong>locality</strong> to the core video capture flow, and make the UI component significantly easier to navigate.
+        </p>
+        <p class="text-slate-400 text-sm">
+            Please reply with which candidate you would like to explore further, and we will initiate the Grilling process to design the interface!
+        </p>
+    </div>
+</body>
+</html>

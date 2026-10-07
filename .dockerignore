@@ -1,0 +1,21 @@
+# Docker ignore file
+.git
+.gitignore
+node_modules
+node_modules/
+dist
+dist/
+dev-dist
+dev-dist/
+build/
+coverage/
+__MACOSX/
+__MACOSX
+.DS_Store
+*.log
+.cursor/
+.agents/
+.vscode/
+.env
+.env.local
+.env.*.local
